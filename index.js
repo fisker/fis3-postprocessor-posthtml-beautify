@@ -3,37 +3,51 @@
  * fisker Cheung<lionkay@gmail.com>
  */
 
-'use strict';
+'use strict'
 
-var posthtml = require('posthtml');
-var beautify = require('posthtml-beautify');
-var syncPromise = require('promise-synchronizer');
-var log = (global.fis && fis.log) || console;
+var posthtml = require('posthtml')
+var beautify = require('posthtml-beautify')
+var syncPromise = require('promise-synchronizer')
+var log = (global.fis && fis.log) || console
 
-module.exports = function(content, file, conf){
-  content = content.replace(/__relative\("(.*?)"\)/g, '"__relative_fn1_start__$1__relative_fn1_end__"');
-  content = content.replace(/__relative<<<"(.*?)">>>/g, '"__relative_fn2_start__$1__relative_fn2_end__"');
+module.exports = function(content, file, conf) {
+  content = content.replace(
+    /__relative\("(.*?)"\)/g,
+    '"__relative_fn1_start__$1__relative_fn1_end__"'
+  )
+  content = content.replace(
+    /__relative<<<"(.*?)">>>/g,
+    '"__relative_fn2_start__$1__relative_fn2_end__"'
+  )
 
   var promise = posthtml()
-    .use(beautify({
-      rules: conf.rules
-    }))
+    .use(
+      beautify({
+        rules: conf.rules
+      })
+    )
     .process(content)
     .then(function(data) {
-      content = data.html;
+      return data.html
     })
-    .catch(function(err) {
-      log.warn('%s might not processed due to:\n %s', file.id, err);
-      process.exit(1);
-    });
 
-  syncPromise(promise);
+  try {
+    content = syncPromise(promise)
+  } catch (err) {
+    log.warn('%s might not processed due to:\n %s', file.id, err)
+    process.exit(1)
+  }
 
-  content = content.replace(/"__relative_fn2_start__(.*?)__relative_fn2_end__"/g, '__relative<<<"$1">>>');
-  content = content.replace(/"__relative_fn1_start__(.*?)__relative_fn1_end__"/g, '__relative("$1")');
-  return content;
-};
-
+  content = content.replace(
+    /"__relative_fn2_start__(.*?)__relative_fn2_end__"/g,
+    '__relative<<<"$1">>>'
+  )
+  content = content.replace(
+    /"__relative_fn1_start__(.*?)__relative_fn1_end__"/g,
+    '__relative("$1")'
+  )
+  return content
+}
 
 module.exports.defaultOptions = {
   rules: {
@@ -41,5 +55,4 @@ module.exports.defaultOptions = {
     eol: '\n',
     eof: '\n'
   }
-};
-
+}
