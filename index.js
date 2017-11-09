@@ -7,7 +7,7 @@
 
 var posthtml = require('posthtml')
 var beautify = require('posthtml-beautify')
-var syncPromise = require('promise-synchronizer')
+var sync = require('promise-synchronizer')
 var log = (global.fis && fis.log) || console
 
 module.exports = function(content, file, conf) {
@@ -32,7 +32,7 @@ module.exports = function(content, file, conf) {
     })
 
   try {
-    content = syncPromise(promise)
+    content = sync(promise)
   } catch (err) {
     log.warn('%s might not processed due to:\n %s', file.id, err)
     process.exit(1)
