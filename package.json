@@ -22,8 +22,8 @@
   "author": "fisker Cheung <lionkay@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "posthtml": "^0.9.1",
-    "posthtml-beautify": "^0.1.0",
+    "posthtml": "^0.11.3",
+    "posthtml-beautify": "^0.2.0",
     "promise-synchronizer": "^1.0.5"
   },
   "scripts": {
