@@ -1,3 +1,8 @@
+[Deprecated]
+
+see https://github.com/fisker/fis3-plugins
+
+
 fis3-postprocessor-posthtml-beautify
 a css formatter of fis3 based on js-beautify
 
